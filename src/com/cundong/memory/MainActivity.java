@@ -78,11 +78,16 @@ public class MainActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			String usedPercentValue = intent.getStringExtra("usedPercentValue");
 			long availableMemory = intent.getLongExtra("availableMemory", 0);
-
+			long totalPss = intent.getLongExtra("totalPss", 0);
+			
 			StringBuffer sb = new StringBuffer();
 			sb.append("usedPercentValue:").append(usedPercentValue)
-					.append("\r\n").append("availableMemory:")
-					.append(availableMemory).append("M");
+					.append("\r\n")
+					.append("availableMemory:")
+					.append(availableMemory).append("M")
+					.append("\r\n")
+					.append("totalPss:")
+					.append(totalPss / (float)1024).append("M");
 
 			mTextView.setText(sb.toString());
 		}

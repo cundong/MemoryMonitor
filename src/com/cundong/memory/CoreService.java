@@ -48,14 +48,20 @@ public class CoreService extends Service {
 
 		@Override
 		public void run() {
-
+			
 			String usedPercentValue = MemoryUtil.getUsedPercentValue(mContext);
 			long availableMemory = MemoryUtil.getAvailableMemory(mContext) / 1024 / 1024;
-
+			
+			//TODO
+			String packageName = "com.evernote";
+			long totalPss = MemoryUtil.getTotalPss(mContext, packageName);
+			
 			Intent intent = new Intent(Constants.FILTER);
 			intent.putExtra("usedPercentValue", usedPercentValue);
 			intent.putExtra("availableMemory", availableMemory);
 
+			intent.putExtra("totalPss", totalPss);
+			
 			sendBroadcast(intent);
 		}
 	}
