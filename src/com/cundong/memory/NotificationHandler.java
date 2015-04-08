@@ -80,34 +80,41 @@ public class NotificationHandler {
 		PendingIntent pIntent = PendingIntent.getActivity(context, 0,
 				intent, 0);
 		
+		StringBuffer sb = new StringBuffer();
+		for(String str : content) {
+			sb.append(str).append(",");
+		}
+		
 		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			// Building the expandable content
 			NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 			
 			inboxStyle.setBigContentTitle(title);
+			
 			for (String line : content) {
 				inboxStyle.addLine(line);
 			}
-
+			
 			// Building the notification
 			NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(
 					context)
 					.setSmallIcon(R.drawable.ic_launcher)
 					// notification icon
-					.setContentTitle("Expandable notification")
+					.setContentTitle(title)
 					// title of notification
-					.setContentText(
-							"This is an example of an expandable notification") // text
+					.setContentText(sb.toString()) // text
 																				// inside
 																				// the
-																				// notification
+																			// notification
 					.setContentIntent(pIntent)
-					
-					.setStyle(inboxStyle); // adds the expandable content to the
+				    
+					.setStyle(inboxStyle);
+         
+					//.setStyle(inboxStyle); // adds the expandable content to the
 											// notification
 
 			mNotificationManager.notify(11, nBuilder.build());
-
+			
 		} else {
 			Toast.makeText(context, "Can't show", Toast.LENGTH_LONG).show();
 		}

@@ -21,3 +21,22 @@ Proportional Set Size实际使用的物理内存（比例分配共享库占用�
 
 每隔1秒，获取一次某个App的所占用的Total Pss，通过实时查看Total Pss的值来监控应用运行时所占的内存的大小。
 
+## 截图
+
+
+
+## License
+
+    Copyright 2015 Cundong
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
