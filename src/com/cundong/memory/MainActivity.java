@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		mButton1 = (Button) findViewById(R.id.button1);
 		mButton2 = (Button) findViewById(R.id.button2);
 		mButton3 = (Button) findViewById(R.id.button3);
@@ -79,16 +79,14 @@ public class MainActivity extends Activity {
 			String usedPercentValue = intent.getStringExtra("usedPercentValue");
 			long availableMemory = intent.getLongExtra("availableMemory", 0);
 			long totalPss = intent.getLongExtra("totalPss", 0);
-			
+
 			StringBuffer sb = new StringBuffer();
 			sb.append("usedPercentValue:").append(usedPercentValue)
 					.append("\r\n")
-					.append("availableMemory:")
-					.append(availableMemory).append("M")
+					.append("availableMemory:").append(availableMemory / (float) 1024 / (float) 1024).append("M")
 					.append("\r\n")
-					.append("totalPss:")
-					.append(totalPss / (float)1024).append("M");
-
+					.append(Constants.TEST_PACKAGENAME).append(" totalPss:").append(totalPss).append("K");
+			
 			mTextView.setText(sb.toString());
 		}
 	}

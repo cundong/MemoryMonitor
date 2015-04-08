@@ -65,7 +65,7 @@ public class MemoryUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "悬浮窗";
+		return "";
 	}
 	
 	/**

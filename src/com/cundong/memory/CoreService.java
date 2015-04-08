@@ -13,11 +13,14 @@ public class CoreService extends Service {
 	private Context mContext = null;
 	private Timer timer;
 
+	private NotificationHandler mHandler = null;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
 		mContext = getApplicationContext();
+		mHandler = NotificationHandler.getInstance(this);
 	}
 
 	@Override
@@ -50,17 +53,21 @@ public class CoreService extends Service {
 		public void run() {
 			
 			String usedPercentValue = MemoryUtil.getUsedPercentValue(mContext);
-			long availableMemory = MemoryUtil.getAvailableMemory(mContext) / 1024 / 1024;
-			
-			//TODO
-			String packageName = "com.evernote";
-			long totalPss = MemoryUtil.getTotalPss(mContext, packageName);
+			long availableMemory = MemoryUtil.getAvailableMemory(mContext);
+			long totalPss = MemoryUtil.getTotalPss(mContext, Constants.TEST_PACKAGENAME);
 			
 			Intent intent = new Intent(Constants.FILTER);
 			intent.putExtra("usedPercentValue", usedPercentValue);
 			intent.putExtra("availableMemory", availableMemory);
-
 			intent.putExtra("totalPss", totalPss);
+			
+			String[] content = new String[] {
+					"usedPercentValue:" + usedPercentValue,
+					"availableMemory:" + availableMemory / (float) 1024 / (float) 1024 + "M",
+					Constants.TEST_PACKAGENAME + " totalPss:" + totalPss + "K" };
+			
+			mHandler.createExpandableNotification(mContext, "MemoryMonitor",
+					content, MainActivity.class);
 			
 			sendBroadcast(intent);
 		}
