@@ -12,7 +12,6 @@
         android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
         android:text="StartMonitor" />
 
     <Button
@@ -35,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button3"
         android:layout_marginTop="10dip"
-        android:gravity="left"
         android:textSize="18sp" />
 
 </RelativeLayout>
