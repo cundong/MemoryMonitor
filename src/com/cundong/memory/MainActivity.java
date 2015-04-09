@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cundong.memory.service.CoreService;
+import com.cundong.memory.util.MemoryUtil;
 import com.example.testmemo.R;
 
 public class MainActivity extends Activity {

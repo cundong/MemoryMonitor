@@ -1,4 +1,4 @@
-package com.cundong.memory;
+package com.cundong.memory.util;
 
 import java.util.Random;
 

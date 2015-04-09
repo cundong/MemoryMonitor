@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.cundong.memory.ViewUtils;
+import com.cundong.memory.util.ViewUtils;
 import com.example.testmemo.R;
 
 /**

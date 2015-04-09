@@ -1,7 +1,12 @@
-package com.cundong.memory;
+package com.cundong.memory.service;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.cundong.memory.Constants;
+import com.cundong.memory.MainActivity;
+import com.cundong.memory.util.MemoryUtil;
+import com.cundong.memory.util.NotificationHandler;
 
 import android.app.Service;
 import android.content.Context;

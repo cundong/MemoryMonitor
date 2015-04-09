@@ -1,4 +1,4 @@
-package com.cundong.memory;
+package com.cundong.memory.util;
 
 import android.view.View;
 import android.view.ViewGroup;
