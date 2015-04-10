@@ -28,11 +28,63 @@ Pss（Proportional Set Size）：实际使用的物理内存，即：自身应�
 
 ## 内存优化
 
+Android的虚拟机是基于寄存器的Dalvik，它的最大堆大小一般比较小（最低端的设备16M，后来出的设备变成了24M，48M等等），因此我们所能利用的内存空间是有限的。如果我们使用内存占用超过了一定的限额后就会出现OutOfMemory的错误。
+
+可能会导致内存溢出的情况有以下几种：
+
+>* 对静态变量的错误使用 
+
+如果一个变量为static变量，它就属于整个类，而不是类的具体实例，所以static变量的生命周期是特别的长，如果static变量引用了一些资源耗费过多的实例，例如Context，就有内存溢出的危险。
+
+Google开发者博客，给出了一个例子：http://android-developers.blogspot.jp/2009/01/avoiding-memory-leaks.html
+专门介绍长时间的引用Context导致内存溢出的情况。
+
+这种情况：
+
+静态的sBackground变量，虽然没有显式的持有Context的引用，但是：
+当我们执行view.setBackgroundDrawable(Drawable drawable);之后。
+Drawable会将View设置为一个回调（通过setCallback()方法），所以就会存在这么一个隐式的引用链：Drawable持有View，View持有Context
+sBackground是静态的，生命周期特别的长，就会导致了Context的溢出。
+
+解决办法：
+1.不用activity的context 而是用Application的Context；（）
+2.在onDestroy()方法中，解除Activity与Drawable的绑定关系,从而去除Drawable对Activity的引用，使Context能够被回收；（）
+
+>* 长周期内部类、匿名内部类长时间持有外部类引用导致相关资源无法释放
+
+长周期内部类、匿名内部类，如Handler，Thread，AsyncTask等。
+
+HandlerOutOfMemoryActivity所示的是Handler引发的内存溢出。
+
+ThreadOutOfMemoryActivity所示的是Thread引发的内存溢出。
+
+AsyncTaskOutOfMemoryActivity所示的时AsyncTask引发的内存溢出。
+
+>* Bitmap导致的内存溢出
+
+一般是因为尝试加载过大的图片到内存，或者是内存中已经存在的过多的图片，从而导致内存溢出。
+
+>* 数据库Cursor未关闭
+ 正常情况下，如果查询得到的数据量较小时不会有内存问题，而且虚拟机能够保证Cusor最终会被释放掉，如果Cursor的数据量特表大，特别是如果里面有Blob信息时，应该保证Cursor占用的内存被及时的释放掉，而不是等待GC来处理。
+	
+>* 代码中一些细节
+
+1.尽量使用9path
+2.Adapter要使用convertView
+3.各种监听，广播等，注册后忘记取消
+4.使用完对象要及时销毁，能使用局部变量的不要使用全局变量，功能用完成后要去掉对他的引用
+5.切勿在循环调用的地方去产生对象，比如很多人不会注意的在getview里new onclicklistener(),这样的方式拖动的次数越多那么就会产生越多的对象。
+6.使用Android推荐的数据结构，比如HashMap替换为SparseArray，避免使用枚举类型（在Android平台，枚举类型的内存消耗是Static常量的的2倍）
+7.使用lint工具优化工程
+8.字符串拼接使用StringBuilder或者StringBuffer
+9.尽量使用静态匿名内部类，如果需要对外部类的引用，使用弱引用
+10.for循环的时候
+final int size = array.length;
+for(int i = 0; i< size;i++)
+来替代：
+for(int i =0;i < array.length;i++) 
+
 我整理了一些开发中可能会导致内存溢出的情况，放在com.cundong.memory.wrong中，并且给出了优化方法，放在com.cundong.memory.right中。
-
-## 截图
-
-
 
 ## License
 
