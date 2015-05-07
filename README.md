@@ -4,16 +4,17 @@
 
 主要包括三部分内容：
 
-1. 内存清理
+1. 内存清理  
+
 通过内存清理可以模拟系统内存不足时对进程的回收。
 
-2. 指定进程内存使用情况监控
+2. 内存监控  
+
 通过内存监控可以监控指定应用程序使用的total Pss以及当前手机的内存使用情况，从而检测该应用是否存在内存泄漏。
 
-3. 一些容易导致内存溢出的场景示例
-包含错误的写法和正确的写法。
+3. 内存优化
 
-最后，还整理了一些关于内存优化的tips。
+整理了一些关于内存优化的tips，以及一些可能导致内存溢出的场景示例，包含错误的写法和正确的写法。
 
 ## 1.内存清理
 
@@ -105,6 +106,4 @@ AsyncTaskOutOfMemoryActivity所示的时AsyncTask引发的内存溢出。
 来替代：
 `for(int i =0;i < array.length;i++) `
 
-最后。
-
-我整理了一些开发中可能会导致内存溢出的情况，放在com.cundong.memory.demo.wrong中，并且给出了优化方法，放在com.cundong.memory.demo.right中。
+最后，整理了一些开发中可能会导致内存溢出的场景，放在com.cundong.memory.demo.wrong中，并且给出了优化方法，放在com.cundong.memory.demo.right中。
