@@ -1,4 +1,4 @@
-package com.cundong.memory.wrong;
+package com.cundong.memory.demo.wrong;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.cundong.memory.util.BitmapUtils;
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 /**
  * AsyncTask引发的内存溢出

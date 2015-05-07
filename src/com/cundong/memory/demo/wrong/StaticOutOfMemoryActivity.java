@@ -1,11 +1,11 @@
-package com.cundong.memory.wrong;
+package com.cundong.memory.demo.wrong;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 /**
  * static变量引发的内存溢出

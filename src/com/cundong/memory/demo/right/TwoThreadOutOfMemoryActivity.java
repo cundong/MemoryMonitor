@@ -1,4 +1,4 @@
-package com.cundong.memory.right;
+package com.cundong.memory.demo.right;
 
 import java.lang.ref.WeakReference;
 
@@ -6,7 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 /**
  * 解决Thread引发的内存溢出

@@ -12,7 +12,6 @@
         android:id="@+id/desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp" 
-        />
+        android:textSize="18sp" />
 
 </RelativeLayout>

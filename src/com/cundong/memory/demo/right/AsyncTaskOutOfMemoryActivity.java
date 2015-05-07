@@ -1,4 +1,4 @@
-package com.cundong.memory.right;
+package com.cundong.memory.demo.right;
 
 import java.lang.ref.WeakReference;
 
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.cundong.memory.util.BitmapUtils;
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 /**
  * AsyncTask引发的内存溢出解决办法

@@ -12,21 +12,21 @@
         android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="StartMonitor" />
+        android:text="@string/startmonitor" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button1"
-        android:text="StopMonitor" />
+        android:text="@string/stopmonitor" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/button2"
-        android:text="ClearMemory" />
+        android:text="@string/clearmemory" />
 
     <TextView
         android:id="@+id/desc"
@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button3"
         android:layout_marginTop="10dip"
+        android:text="desc"
         android:textSize="18sp" />
 
 </RelativeLayout>

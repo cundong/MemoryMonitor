@@ -1,4 +1,4 @@
-package com.cundong.memory.right;
+package com.cundong.memory.demo.right;
 
 import java.lang.ref.WeakReference;
 
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 /**
  * 解决Handler引发的内存溢出

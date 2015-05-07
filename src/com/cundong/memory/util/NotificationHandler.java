@@ -12,7 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.Toast;
 
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 public class NotificationHandler {
 	

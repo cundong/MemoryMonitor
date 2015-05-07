@@ -1,11 +1,11 @@
-package com.cundong.memory.wrong;
+package com.cundong.memory.demo.wrong;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 /**
  * Handler引发的内存溢出

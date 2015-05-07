@@ -1,4 +1,4 @@
-package com.cundong.memory.right;
+package com.cundong.memory.demo.wrong;
 
 import java.lang.ref.WeakReference;
 
@@ -6,17 +6,30 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.example.testmemo.R;
+import com.cundong.memory.R;
 
 /**
- * 解决Thread引发的内存溢出
+ * Thread引发的内存溢出
+ * 
+ * 当前情况：
+ * 
+ * 1.
+ * 内部类MyThread，持有对外部ThreadOutOfMemoryActivity的隐式引用
+ * 
+ * 2.
+ * 如果我们切换横竖屏，默认就会销毁当前Activity，而这个Activity却被MyThread所持有
+ * 
+ * 于是就出现了溢出。
+ * 
  * 
  * 解决办法：
  * 
- * 在线程内部采用弱引用保存Context引用
+ * 1.MyThread改为静态内部类
+ * 
+ * 2.在线程内部采用弱引用保存Context引用
  * 
  */
-public class OneThreadOutOfMemoryActivity extends Activity {
+public class ThreadOutOfMemoryActivity extends Activity {
 	
 	private Context mContext;
 	

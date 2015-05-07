@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.cundong.memory.service.CoreService;
 import com.cundong.memory.util.MemoryUtil;
-import com.example.testmemo.R;
 
 public class MainActivity extends Activity {
 
@@ -73,7 +72,7 @@ public class MainActivity extends Activity {
 
 		unregisterReceiver(mMyReceiver);
 	}
-
+	
 	private class MyReceiver extends BroadcastReceiver {
 
 		@Override
@@ -82,12 +81,17 @@ public class MainActivity extends Activity {
 			long availableMemory = intent.getLongExtra("availableMemory", 0);
 			long totalPss = intent.getLongExtra("totalPss", 0);
 
+			String[] contentArr = new String[] {
+					getString(R.string.used_percent_value, usedPercentValue),
+					getString(R.string.available_memory, availableMemory / (float) 1024 / (float) 1024),
+					getString(R.string.total_pss, Constants.TEST_PACKAGENAME, totalPss) };
+			
 			StringBuffer sb = new StringBuffer();
-			sb.append("usedPercentValue:").append(usedPercentValue)
+			sb.append(contentArr[0])
 					.append("\r\n")
-					.append("availableMemory:").append(availableMemory / (float) 1024 / (float) 1024).append("M")
+					.append(contentArr[1])
 					.append("\r\n")
-					.append(Constants.TEST_PACKAGENAME).append(" totalPss:").append(totalPss).append("K");
+					.append(contentArr[2]);
 			
 			mTextView.setText(sb.toString());
 		}
