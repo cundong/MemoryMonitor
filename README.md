@@ -26,7 +26,7 @@
 
 ## 2.内存监控
 
-Android系统中的内存和Linux系统一样，存在着大量的共享内存。每个APP占内存会有私有和公共的两部分，我们可以通过App的Pss值，可以获取到这两部分内存。
+Android 系统中的内存和Linux系统一样，存在着大量的共享内存。每个APP占内存会有私有和公共的两部分，我们可以通过App的Pss值，可以获取到这两部分内存。
 
 Pss（Proportional Set Size）：实际使用的物理内存，即：自身应用占有的内存+共享内存中比例分配给这个应用的内存。
 
@@ -56,8 +56,7 @@ Android的虚拟机是基于寄存器的Dalvik，它的最大堆大小一般比�
 
 如果一个变量为static变量，它就属于整个类，而不是类的具体实例，所以static变量的生命周期是特别的长，如果static变量引用了一些资源耗费过多的实例，例如Context，就有内存溢出的危险。
 
-Google开发者博客，给出了一个例子：http://android-developers.blogspot.jp/2009/01/avoiding-memory-leaks.html
-专门介绍长时间的引用Context导致内存溢出的情况。
+[Google开发者博客，给出了一个例子](http://android-developers.blogspot.jp/2009/01/avoiding-memory-leaks.html)，专门介绍长时间引用Context导致内存溢出的情况。
 
 这种情况：
 
