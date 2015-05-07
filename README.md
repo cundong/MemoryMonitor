@@ -111,7 +111,50 @@ public void setBackgroundDrawable(Drawable background) {
 
 1.不用activity的context 而是用Application的Context；  
 
-2.在onDestroy()方法中，解除Activity与Drawable的绑定关系,从而去除Drawable对Activity的引用，使Context能够被回收；  
+```java
+private static Drawable sBackground;
+
+@Override
+protected void onCreate(Bundle state) {
+	super.onCreate(state);
+
+	TextView textView = new TextView(this.getApplication());
+	textView.setText("Leaks are bad");
+		
+	if (sBackground == null) {
+		sBackground = getResources().getDrawable(R.drawable.large_bitmap);
+	}
+		
+	textView.setBackgroundDrawable(sBackground);
+	
+	setContentView(textView);
+}
+```
+2.在onDestroy()方法中，解除Activity与Drawable的绑定关系,从而去除Drawable对Activity的引用，使Context能够被回收； 
+
+```java
+@Override
+protected void onDestroy() {
+	super.onDestroy();
+			
+	ViewUtils.unbindDrawables(findViewById(android.R.id.content));
+		
+	System.gc();
+}
+
+public static void unbindDrawables(View view) {
+	if (view.getBackground() != null) {
+		view.getBackground().setCallback(null);
+	}
+	
+	if (view instanceof ViewGroup) {
+		for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+			unbindDrawables(((ViewGroup) view).getChildAt(i));
+		}
+		((ViewGroup) view).removeAllViews();
+	}
+}
+```
 
 ### 长周期内部类、匿名内部类长时间持有外部类引用导致相关资源无法释放
 
