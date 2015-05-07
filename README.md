@@ -4,15 +4,15 @@
 
 主要包括三部分内容：
 
-1. 内存清理  
+* 内存清理  
 
 通过内存清理可以模拟系统内存不足时对进程的回收。
 
-2. 内存监控  
+* 内存监控  
 
 通过内存监控可以监控指定应用程序使用的total Pss以及当前手机的内存使用情况，从而检测该应用是否存在内存泄漏。
 
-3. 内存优化
+* 内存优化
 
 整理了一些关于内存优化的tips，以及一些可能导致内存溢出的场景示例，包含错误的写法和正确的写法。
 
@@ -58,12 +58,54 @@ Android的虚拟机是基于寄存器的Dalvik，它的最大堆大小一般比�
 
 [Google开发者博客，给出了一个例子](http://android-developers.blogspot.jp/2009/01/avoiding-memory-leaks.html)，专门介绍长时间引用Context导致内存溢出的情况。
 
-这种情况：
+示例代码：
 
-静态的sBackground变量，虽然没有显式的持有Context的引用，但是：
-当我们执行view.setBackgroundDrawable(Drawable drawable);之后。
-Drawable会将View设置为一个回调（通过setCallback()方法），所以就会存在这么一个隐式的引用链：Drawable持有View，View持有Context
-sBackground是静态的，生命周期特别的长，就会导致了Context的溢出。
+```java
+private static Drawable sBackground;
+
+@Override
+protected void onCreate(Bundle state) {
+	super.onCreate(state);
+
+	TextView textView = new TextView(this);
+	textView.setText("Leaks are bad");
+		
+	if (sBackground == null) {
+		sBackground = getResources().getDrawable(R.drawable.large_bitmap);
+	}
+		
+	textView.setBackgroundDrawable(sBackground);
+	
+	setContentView(textView);
+}
+```
+
+这种情况下，静态的sBackground变量，虽然没有显式的持有Context的引用，但当我们执行`view.setBackgroundDrawable(Drawable drawable);`的时候，drawable 对象会将当前view设置为一个回调，通过 `View.setCallback(this)` 方法。  
+
+具体可见View类的源码：  
+```
+public void setBackgroundDrawable(Drawable background) {
+	//...
+	
+	if (mBackground == null || mBackground.getMinimumHeight() != background.getMinimumHeight() ||
+                mBackground.getMinimumWidth() != background.getMinimumWidth()) {
+                requestLayout = true;
+        }
+
+        background.setCallback(this);
+            if (background.isStateful()) {
+                background.setState(getDrawableState());
+        }
+        
+        background.setVisible(getVisibility() == VISIBLE, false);
+        mBackground = background;
+            
+	//...
+}
+```
+`background.setCallback(this);` 代码块就是我们说的设置回调。
+
+所以，这种情况就会存在这么一个隐式的引用链：Drawable持有View，而View持有Context，sBackground 是静态的，生命周期特别的长，于是就会导致了Context的溢出。
 
 解决办法：  
 
