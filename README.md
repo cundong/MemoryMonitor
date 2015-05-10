@@ -1,8 +1,20 @@
 # MemoryMonitor 
 
-一个给开发者使用的Android App内存清理、监控工具，可以获取当前手机的内存使用比率，可用内存大小，检查一个APP是否存在内存泄漏。
+一个给开发者使用的Android App内存清理、监控工具。  
 
-并且整理了一些优化内存的方式。
+主要包括三部分内容：
+
+* 内存清理  
+
+通过内存清理可以模拟系统内存不足时对进程的回收。
+
+* Pss监控  
+
+通过内存监控可以监控指定应用程序使用的total Pss以及当前手机的内存使用情况，从而检测该应用是否存在内存泄漏。
+
+* 内存优化
+
+整理了一些关于内存优化的tips，以及一些可能导致内存溢出的场景示例，包含错误的写法和正确的写法。
 
 ## 1.内存清理
 
@@ -12,13 +24,13 @@
 
 比如：打开你开发的某个Activity、Fragment，切到后台，清理一次内存，在将其切回前台后，看会不会出现空指针异常，以及程序状态是否被恢复。
 
-## 2.内存监控
+## 2.Pss监控
 
-Android系统中的内存和Linux系统一样，存在着大量的共享内存。每个APP占内存会有私有和公共的两部分，我们可以通过App的Pss值，可以获取到这两部分内存。
+Android 系统中的内存和Linux系统一样，存在着大量的共享内存。每个APP占内存会有私有和公共的两部分，我们可以通过App的Pss值，可以获取到这两部分内存。
 
 Pss（Proportional Set Size）：实际使用的物理内存，即：自身应用占有的内存+共享内存中比例分配给这个应用的内存。
 
-通过改程序，每隔1秒，获取一次被监控App的Total Pss值。
+通过该程序，每隔1秒，获取一次被监控App的Total Pss值。
 
 使用某个功能（可能会导致OOM的那些都要试试），查看Pss是否飙升，或者使用过许久都没有降低。
 
@@ -26,31 +38,125 @@ Pss（Proportional Set Size）：实际使用的物理内存，即：自身应�
 
 如果使用后飙升并且长时间都降不下来，我们就需要使用MAT来进一步分析问题所在。
 
+此处提到的Pss，也可以使用adb命令 
+
+> adb shell dumpsys meminfo *your packageName* 
+
+查看：  
+
+![total Pss](https://github.com/cundong/MemoryMonitor/blob/master/screenshot/total%20Pss.png?raw=true)  
+
 ## 3.内存优化
 
 Android的虚拟机是基于寄存器的Dalvik，它的最大堆大小一般比较小（最低端的设备16M，后来出的设备变成了24M，48M等等），因此我们所能利用的内存空间是有限的。如果我们使用内存占用超过了一定的限额后就会出现OutOfMemory的错误。
 
 可能会导致内存溢出的情况有以下几种：
 
-### 1)对静态变量的错误使用 
+### 对静态变量的错误使用 
 
 如果一个变量为static变量，它就属于整个类，而不是类的具体实例，所以static变量的生命周期是特别的长，如果static变量引用了一些资源耗费过多的实例，例如Context，就有内存溢出的危险。
 
-Google开发者博客，给出了一个例子：http://android-developers.blogspot.jp/2009/01/avoiding-memory-leaks.html
-专门介绍长时间的引用Context导致内存溢出的情况。
+[Google开发者博客，给出了一个例子](http://android-developers.blogspot.jp/2009/01/avoiding-memory-leaks.html)，专门介绍长时间引用Context导致内存溢出的情况。
 
-这种情况：
+示例代码：
 
-静态的sBackground变量，虽然没有显式的持有Context的引用，但是：
-当我们执行view.setBackgroundDrawable(Drawable drawable);之后。
-Drawable会将View设置为一个回调（通过setCallback()方法），所以就会存在这么一个隐式的引用链：Drawable持有View，View持有Context
-sBackground是静态的，生命周期特别的长，就会导致了Context的溢出。
+```java
+private static Drawable sBackground;
 
-解决办法：
-1.不用activity的context 而是用Application的Context；（）
-2.在onDestroy()方法中，解除Activity与Drawable的绑定关系,从而去除Drawable对Activity的引用，使Context能够被回收；（）
+@Override
+protected void onCreate(Bundle state) {
+	super.onCreate(state);
 
-### 2)长周期内部类、匿名内部类长时间持有外部类引用导致相关资源无法释放
+	TextView textView = new TextView(this);
+	textView.setText("Leaks are bad");
+		
+	if (sBackground == null) {
+		sBackground = getResources().getDrawable(R.drawable.large_bitmap);
+	}
+		
+	textView.setBackgroundDrawable(sBackground);
+	
+	setContentView(textView);
+}
+```
+
+这种情况下，静态的sBackground变量，虽然没有显式的持有Context的引用，但当我们执行`view.setBackgroundDrawable(Drawable drawable);`的时候，drawable 对象会将当前view设置为一个回调，通过 `View.setCallback(this)` 方法。  
+
+具体可见View类的源码：  
+```
+public void setBackgroundDrawable(Drawable background) {
+	//...
+	
+	if (mBackground == null || mBackground.getMinimumHeight() != background.getMinimumHeight() ||
+                mBackground.getMinimumWidth() != background.getMinimumWidth()) {
+                requestLayout = true;
+        }
+
+        background.setCallback(this);
+            if (background.isStateful()) {
+                background.setState(getDrawableState());
+        }
+        
+        background.setVisible(getVisibility() == VISIBLE, false);
+        mBackground = background;
+            
+	//...
+}
+```
+`background.setCallback(this);` 代码块就是我们说的设置回调。
+
+所以，这种情况就会存在这么一个隐式的引用链：Drawable持有View，而View持有Context，sBackground 是静态的，生命周期特别的长，于是就会导致了Context的溢出。
+
+解决办法：  
+
+1.不用activity的context 而是用Application的Context；  
+
+```java
+private static Drawable sBackground;
+
+@Override
+protected void onCreate(Bundle state) {
+	super.onCreate(state);
+
+	TextView textView = new TextView(this.getApplication());
+	textView.setText("Leaks are bad");
+		
+	if (sBackground == null) {
+		sBackground = getResources().getDrawable(R.drawable.large_bitmap);
+	}
+		
+	textView.setBackgroundDrawable(sBackground);
+	
+	setContentView(textView);
+}
+```
+2.在onDestroy()方法中，解除Activity与Drawable的绑定关系,从而去除Drawable对Activity的引用，使Context能够被回收； 
+
+```java
+@Override
+protected void onDestroy() {
+	super.onDestroy();
+			
+	ViewUtils.unbindDrawables(findViewById(android.R.id.content));
+		
+	System.gc();
+}
+
+public static void unbindDrawables(View view) {
+	if (view.getBackground() != null) {
+		view.getBackground().setCallback(null);
+	}
+	
+	if (view instanceof ViewGroup) {
+		for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+			unbindDrawables(((ViewGroup) view).getChildAt(i));
+		}
+		((ViewGroup) view).removeAllViews();
+	}
+}
+```
+
+### 长周期内部类、匿名内部类长时间持有外部类引用导致相关资源无法释放
 
 长周期内部类、匿名内部类，如Handler，Thread，AsyncTask等。
 
@@ -60,14 +166,14 @@ ThreadOutOfMemoryActivity所示的是Thread引发的内存溢出。
 
 AsyncTaskOutOfMemoryActivity所示的时AsyncTask引发的内存溢出。
 
-### 3)Bitmap导致的内存溢出
+### Bitmap导致的内存溢出
 
 一般是因为尝试加载过大的图片到内存，或者是内存中已经存在的过多的图片，从而导致内存溢出。
 
-### 4)数据库Cursor未关闭
+### 数据库Cursor未关闭
 正常情况下，如果查询得到的数据量较小时不会有内存问题，而且虚拟机能够保证Cusor最终会被释放掉，如果Cursor的数据量特表大，特别是如果里面有Blob信息时，应该保证Cursor占用的内存被及时的释放掉，而不是等待GC来处理。
 	
-### 5)代码中一些细节
+### 代码中一些细节
 
 >* 尽量使用9path
 >* Adapter要使用convertView
@@ -80,11 +186,8 @@ AsyncTaskOutOfMemoryActivity所示的时AsyncTask引发的内存溢出。
 >* 尽量使用静态匿名内部类，如果需要对外部类的引用，使用弱引用
 >* for循环的使用
 用
-final int size = array.length;
-for(int i = 0; i< size;i++)
+`final int size = array.length; for(int i = 0; i< size;i++)`
 来替代：
-for(int i =0;i < array.length;i++) 
+`for(int i =0;i < array.length;i++) `
 
-最后。
-
-我整理了一些开发中可能会导致内存溢出的情况，放在com.cundong.memory.wrong中，并且给出了优化方法，放在com.cundong.memory.right中。
+最后，整理了一些开发中可能会导致内存溢出的场景，放在com.cundong.memory.demo.wrong中，并且给出了优化方法，放在com.cundong.memory.demo.right中。
