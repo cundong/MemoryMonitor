@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cundong.memory.service.CoreService;
 import com.cundong.memory.util.MemoryUtil;
@@ -36,6 +37,8 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, CoreService.class);
 				startService(intent);
+				
+				finish();
 			}
 		});
 
@@ -52,6 +55,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				Toast.makeText(getApplicationContext(), "clearMemory", Toast.LENGTH_SHORT).show();
 				MemoryUtil.clearMemory(getApplicationContext());
 			}
 		});
@@ -83,16 +87,15 @@ public class MainActivity extends Activity {
 
 			String[] contentArr = new String[] {
 					getString(R.string.used_percent_value, usedPercentValue),
-					getString(R.string.available_memory, availableMemory / (float) 1024 / (float) 1024),
-					getString(R.string.total_pss, Constants.TEST_PACKAGENAME, totalPss) };
-			
+					getString(R.string.available_memory, availableMemory
+							/ (float) 1024 / (float) 1024),
+					getString(R.string.total_pss, Constants.TEST_PACKAGENAME,
+							totalPss) };
+
 			StringBuffer sb = new StringBuffer();
-			sb.append(contentArr[0])
-					.append("\r\n")
-					.append(contentArr[1])
-					.append("\r\n")
-					.append(contentArr[2]);
-			
+			sb.append(contentArr[0]).append("\r\n").append(contentArr[1])
+					.append("\r\n").append(contentArr[2]);
+
 			mTextView.setText(sb.toString());
 		}
 	}

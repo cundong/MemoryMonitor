@@ -42,15 +42,15 @@ public class StaticOutOfMemoryActivity extends Activity {
 	protected void onCreate(Bundle state) {
 		super.onCreate(state);
 
-		TextView label = new TextView(this);
-		label.setText("Leaks are bad");
+		TextView textView = new TextView(this);
+		textView.setText("Leaks are bad");
 		
 		if (sBackground == null) {
 			sBackground = getResources().getDrawable(R.drawable.large_bitmap);
 		}
 		
-		label.setBackgroundDrawable(sBackground);
+		textView.setBackgroundDrawable(sBackground);
 		
-		setContentView(label);
+		setContentView(textView);
 	}
 }

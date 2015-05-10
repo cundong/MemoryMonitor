@@ -8,8 +8,8 @@
     <string name="startmonitor">开始监控</string>
     <string name="stopmonitor">停止监控</string>
     <string name="clearmemory">清理内存</string>
-    <string name="used_percent_value">内存使用比率：%1$s</string>
-    <string name="available_memory">可用内存：%1$s M</string>
-    <string name="total_pss">%1$s Total Pss：%2$s K</string>
-
+    <string name="used_percent_value">内存使用：\r\n%1$s</string>
+    <string name="available_memory">可用内存：\r\n%1$s M</string>
+    <string name="total_pss">Total Pss：\r\n%1$sK</string>
+	
 </resources>
