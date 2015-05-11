@@ -35,15 +35,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/button2"
             android:text="@string/clearmemory" />
-
-        <TextView
-            android:id="@+id/desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button3"
-            android:layout_marginTop="10dip"
-            android:text="desc"
-            android:textSize="18sp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -19,11 +19,11 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Transparent"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Transparent" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

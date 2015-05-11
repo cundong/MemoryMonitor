@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import com.cundong.memory.Constants;
 import com.cundong.memory.MainActivity;
 import com.cundong.memory.R;
 import com.cundong.memory.util.MemoryUtil;
-import com.cundong.memory.util.NotificationHandler;
 import com.premnirmal.Magnet.IconCallback;
 import com.premnirmal.Magnet.Magnet;
 
@@ -40,9 +38,7 @@ public class CoreService extends Service implements IconCallback {
 
 	private Context mContext = null;
 	private Timer mTimer;
-
-	private NotificationHandler mHandler = null;
-
+	
 	private Magnet mMagnet;
 
 	private View mIconView = null;
@@ -54,8 +50,7 @@ public class CoreService extends Service implements IconCallback {
 		super.onCreate();
 
 		mContext = getApplicationContext();
-		mHandler = NotificationHandler.getInstance(this);
-
+		
 		mIconView = getIconView();
 		mDescView = (TextView) mIconView.findViewById(R.id.content);
 		
@@ -99,13 +94,11 @@ public class CoreService extends Service implements IconCallback {
 
 	@Override
 	public void onDestroy() {
+
 		super.onDestroy();
 
 		mTimer.cancel();
 		mTimer = null;
-
-		NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		nm.cancelAll();
 	}
 	
 	@Override
@@ -120,7 +113,13 @@ public class CoreService extends Service implements IconCallback {
 			mTimer = new Timer();
 			mTimer.scheduleAtFixedRate(new RefreshTask(), 0, 1000);
 		}
-
+		
+		int action = intent.getIntExtra("action", 0);
+		if (action == 2) {
+			mMagnet.destroy();
+			this.stopSelf();
+		}
+		
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -134,13 +133,6 @@ public class CoreService extends Service implements IconCallback {
 			long totalPss = MemoryUtil.getTotalPss(mContext,
 					Constants.TEST_PACKAGENAME);
 
-			Log.i("@Cundong", "totalPss:" + totalPss);
-
-//			Intent intent = new Intent(Constants.FILTER);
-//			intent.putExtra("usedPercentValue", usedPercentValue);
-//			intent.putExtra("availableMemory", availableMemory);
-//			intent.putExtra("totalPss", totalPss);
-
 			float memory = availableMemory / (float) 1024 / (float) 1024;
 			DecimalFormat fnum = new DecimalFormat("##0.00");
 			
@@ -151,12 +143,7 @@ public class CoreService extends Service implements IconCallback {
 
 			StringBuffer sb = new StringBuffer();
 			sb.append(content[0]).append("\r\n").append(content[1]).append("\r\n").append(content[2]);
-			
-//			mHandler.createExpandableNotification(mContext, "MemoryMonitor",
-//					content, MainActivity.class);
-//
-//			sendBroadcast(intent);
-			
+
 			Bundle data = new Bundle();
 			data.putString("content", sb.toString());
 			
@@ -180,8 +167,7 @@ public class CoreService extends Service implements IconCallback {
             } 
             
             super.handleMessage(msg);  
-        }  
-          
+        }   
     };  
     
 	@Override
