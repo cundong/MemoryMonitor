@@ -191,3 +191,7 @@ AsyncTaskOutOfMemoryActivity所示的时AsyncTask引发的内存溢出。
 `for(int i =0;i < array.length;i++) `
 
 最后，整理了一些开发中可能会导致内存溢出的场景，放在com.cundong.memory.demo.wrong中，并且给出了优化方法，放在com.cundong.memory.demo.right中。
+
+## 4.截图
+
+![截屏][https://raw.githubusercontent.com/cundong/MemoryMonitor/master/screenshot/app.png]
