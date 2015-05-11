@@ -174,9 +174,9 @@ AsyncTaskOutOfMemoryActivity所示的时AsyncTask引发的内存溢出。
 
 正常情况下，如果查询得到的数据量较小时不会有内存问题，而且虚拟机能够保证Cusor最终会被释放掉，如果Cursor的数据量特表大，特别是如果里面有Blob信息时，应该保证Cursor占用的内存被及时的释放掉，而不是等待GC来处理。
 
-### 单例模式
+### 单例模式引用Context导致的内存泄露
 
-如果在某个Activity中使用 `Singleton instance = Singleton.getInstance(this);` 就会造成该Activity一直被Singleton引用着，不能释放。这时候，正确的做法是使用 getApplicationContext() 来替代Activity的Context，这样就能避免内存泄露。
+如果在某个Activity中使用 `Singleton instance = Singleton.getInstance(this);` 就会造成该Activity一直被 `Singleton` 引用着，不能释放。这时候，正确的做法是使用 `getApplicationContext()` 来替代 `Activity的Context` ，这样就能避免内存泄露。
 
 ### 代码中一些细节
 
