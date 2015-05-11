@@ -194,4 +194,6 @@ AsyncTaskOutOfMemoryActivity所示的时AsyncTask引发的内存溢出。
 
 ## 4.截图
 
-![截屏][https://raw.githubusercontent.com/cundong/MemoryMonitor/master/screenshot/app.png]
+![截屏][1]
+
+[1]: https://raw.githubusercontent.com/cundong/MemoryMonitor/master/screenshot/app.png
