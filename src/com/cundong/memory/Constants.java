@@ -9,5 +9,5 @@ public class Constants {
 	 *  改为被监控 total Pss 的 packageName
 	 *  
 	 */
-	public static final String TEST_PACKAGENAME = "com.cundong.izhihu";
+	public static final String TEST_PACKAGENAME = "com.cundong.memory";
 }
