@@ -131,7 +131,7 @@ public class CoreService extends Service implements IconCallback {
 			String usedPercentValue = MemoryUtil.getUsedPercentValue(mContext);
 			long availableMemory = MemoryUtil.getAvailableMemory(mContext);
 			long totalPss = MemoryUtil.getTotalPss(mContext,
-					Constants.TEST_PACKAGENAME);
+					Constants.PROCESS_NAME);
 
 			float memory = availableMemory / (float) 1024 / (float) 1024;
 			DecimalFormat fnum = new DecimalFormat("##0.00");

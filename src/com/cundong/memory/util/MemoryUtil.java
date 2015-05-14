@@ -17,9 +17,10 @@ public class MemoryUtil {
 	 * getTotalPss
 	 * 
 	 * @param context
+	 * @param processName
 	 * @return
 	 */
-	public static long getTotalPss(Context context, String packageName) {
+	public static long getTotalPss(Context context, String processName) {
 
 		ActivityManager activityMgr = (ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE);
@@ -27,7 +28,7 @@ public class MemoryUtil {
 
 		if (list != null) {
 			for (RunningAppProcessInfo processInfo : list) {
-				if (processInfo.processName.equals(packageName)) {
+				if (processInfo.processName.equals(processName)) {
 					int pid = processInfo.pid;
 					MemoryInfo[] memoryInfos = activityMgr
 							.getProcessMemoryInfo(new int[] { pid });
