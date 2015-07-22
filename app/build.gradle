@@ -1,0 +1,25 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "23.0.0 rc2"
+
+    defaultConfig {
+        applicationId "com.cundong.memory"
+        minSdkVersion 15
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.1"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:22.2.0'
+}
