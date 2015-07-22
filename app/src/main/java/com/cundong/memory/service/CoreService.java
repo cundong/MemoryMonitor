@@ -1,9 +1,5 @@
 package com.cundong.memory.service;
 
-import java.text.DecimalFormat;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +21,10 @@ import com.cundong.memory.R;
 import com.cundong.memory.util.MemoryUtil;
 import com.premnirmal.Magnet.IconCallback;
 import com.premnirmal.Magnet.Magnet;
+
+import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 类说明： 后台轮询service 每1秒钟更新一次通知栏 更新内存
@@ -155,7 +155,8 @@ public class CoreService extends Service implements IconCallback {
 		}
 	}
 	
-	Handler handler = new Handler(){   
+	Handler handler = new Handler() {
+
         public void handleMessage(Message msg) {  
             switch (msg.what) {      
             case 1:      
