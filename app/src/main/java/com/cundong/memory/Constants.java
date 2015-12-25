@@ -9,5 +9,5 @@ public class Constants {
 	 *  改为被监控 total Pss 的 processName
 	 *  
 	 */
-	public static final String PROCESS_NAME = "com.cundong.memory";
+	public static final String PROCESS_NAME = "com.sdu.didi.psnger";
 }

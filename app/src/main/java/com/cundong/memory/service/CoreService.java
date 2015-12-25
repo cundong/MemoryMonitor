@@ -22,6 +22,7 @@ import com.cundong.memory.util.MemoryUtil;
 import com.premnirmal.Magnet.IconCallback;
 import com.premnirmal.Magnet.Magnet;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,7 +35,7 @@ import java.util.TimerTask;
  */
 public class CoreService extends Service implements IconCallback {
 
-	private static final String TAG = "Magnet";
+	private static final String TAG = "CoreService";
 
 	private Context mContext = null;
 	private Timer mTimer;
@@ -44,7 +45,9 @@ public class CoreService extends Service implements IconCallback {
 	private View mIconView = null;
 	private TextView mDescView;
 	private ImageButton mClearBtn, mSettingBtn;
-	
+
+	private InnerHandler mHandler;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -73,7 +76,7 @@ public class CoreService extends Service implements IconCallback {
 				Toast.makeText(getApplicationContext(), "test Setting", Toast.LENGTH_SHORT).show();
 			}
 		});
-		
+
 		mMagnet = new Magnet.Builder(this)
 			.setIconView(mIconView)
 			.setIconCallback(this)
@@ -82,23 +85,17 @@ public class CoreService extends Service implements IconCallback {
 			.setShouldFlingAway(true)
 			.setShouldStickToWall(true)
 			.setRemoveIconShouldBeResponsive(true)
+			.setInitialPosition(-100, -200)
 			.build();
 		
 		mMagnet.show();
+
+		mHandler = new InnerHandler(this);
 	}
 
 	private View getIconView() {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		return inflater.inflate(R.layout.float_view, null);
-	}
-
-	@Override
-	public void onDestroy() {
-
-		super.onDestroy();
-
-		mTimer.cancel();
-		mTimer = null;
 	}
 	
 	@Override
@@ -113,14 +110,23 @@ public class CoreService extends Service implements IconCallback {
 			mTimer = new Timer();
 			mTimer.scheduleAtFixedRate(new RefreshTask(), 0, 1000);
 		}
-		
-		int action = intent.getIntExtra("action", 0);
+
+		int action = intent != null ? intent.getIntExtra("action", 0) : 0;
 		if (action == 2) {
 			mMagnet.destroy();
 			this.stopSelf();
 		}
 		
 		return super.onStartCommand(intent, flags, startId);
+	}
+
+	@Override
+	public void onDestroy() {
+
+		super.onDestroy();
+
+		mTimer.cancel();
+		mTimer = null;
 	}
 
 	class RefreshTask extends TimerTask {
@@ -147,30 +153,14 @@ public class CoreService extends Service implements IconCallback {
 			Bundle data = new Bundle();
 			data.putString("content", sb.toString());
 			
-			Message message = handler.obtainMessage(1);    
+			Message message = mHandler.obtainMessage(1);
             message.what = 1;   
             message.setData(data);
-            
-            handler.sendMessage(message);    
+
+			mHandler.sendMessage(message);
 		}
 	}
-	
-	Handler handler = new Handler() {
 
-        public void handleMessage(Message msg) {  
-            switch (msg.what) {      
-            case 1:      
-            	Bundle data = msg.getData();
-            	String content = data.getString("content");
-            	mDescView.setText(content);
-            	
-                break;      
-            } 
-            
-            super.handleMessage(msg);  
-        }   
-    };  
-    
 	@Override
 	public void onFlingAway() {
 		Log.i(TAG, "onFlingAway");
@@ -194,5 +184,33 @@ public class CoreService extends Service implements IconCallback {
 	public void onIconDestroyed() {
 		Log.i(TAG, "onIconDestroyed()");
 		stopSelf();
+	}
+
+	private static class InnerHandler extends Handler {
+
+		private WeakReference<CoreService> ref;
+
+		public InnerHandler(CoreService service) {
+			ref = new WeakReference<>(service);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			CoreService service = ref.get();
+			if (service == null) {
+				return;
+			}
+
+			switch (msg.what) {
+				case 1:
+					Bundle data = msg.getData();
+					String content = data.getString("content");
+					service.mDescView.setText(content);
+
+					break;
+			}
+		}
 	}
 }
