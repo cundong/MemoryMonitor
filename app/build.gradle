@@ -1,25 +1,29 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "23.0.0 rc2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.cundong.memory"
-        minSdkVersion 15
-        targetSdkVersion 21
-        versionCode 1
+        applicationId "cundong.myapplication"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 2
         versionName "1.2"
     }
-
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:22.2.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    compile project(':magnet')
+    compile 'com.premnirmal.magnet:library:1.1.2'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
 }

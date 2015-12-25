@@ -1,18 +1,19 @@
 package com.cundong.memory.util;
 
-import java.util.Random;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
+
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.widget.Toast;
 
 import com.cundong.memory.R;
+
+import java.util.Random;
 
 public class NotificationHandler {
 	

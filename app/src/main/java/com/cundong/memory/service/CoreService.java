@@ -27,9 +27,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 类说明： 后台轮询service 每1秒钟更新一次通知栏 更新内存
+ * 类说明： 	后台轮询service 每1秒钟更新一次通知栏 更新内存
  * 
- * @date 2015-4-18
+ * @date 	2015-4-18
  * @version 1.0
  */
 public class CoreService extends Service implements IconCallback {

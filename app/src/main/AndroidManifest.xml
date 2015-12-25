@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cundong.memory">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19"
+        tools:node="merge" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Transparent" >
+            android:theme="@style/Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +34,7 @@
             android:name=".demo.wrong.HandlerOutOfMemoryActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -37,7 +43,7 @@
             android:name=".demo.wrong.StaticOutOfMemoryActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -46,7 +52,7 @@
             android:name=".demo.right.HandlerOutOfMemoryActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -55,7 +61,7 @@
             android:name=".demo.right.OneStaticOutOfMemoryActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -64,7 +70,7 @@
             android:name=".demo.right.TwoStaticOutOfMemoryActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
