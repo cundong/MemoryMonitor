@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
-	public static int OVERLAY_PERMISSION_REQ_CODE = 1;
+	private static final int OVERLAY_PERMISSION_REQ_CODE = 1;
 
 	private Button mButton1, mButton2, mButton3;
 
@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "clearMemory", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "clearMemory", Toast.LENGTH_LONG).show();
 				MemoryUtil.clearMemory(getApplicationContext());
 			}
 		});
@@ -67,9 +67,8 @@ public class MainActivity extends Activity {
 
 	@TargetApi(Build.VERSION_CODES.M)
 	private void try2StartMonitor() {
-		if (!Settings.canDrawOverlays(this)) {
-			Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-					Uri.parse("package:" + getPackageName()));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+			Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
 			startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
 		} else {
 			Intent intent = new Intent(MainActivity.this, CoreService.class);
@@ -95,7 +94,7 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
 			if (!Settings.canDrawOverlays(this)) {
-				Toast.makeText(this, "sorry, SYSTEM_ALERT_WINDOW permission not granted!!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.permission_err, Toast.LENGTH_SHORT).show();
 			} else {
 				Intent intent = new Intent(MainActivity.this, CoreService.class);
 				intent.putExtra("action", 1);
@@ -117,10 +116,10 @@ public class MainActivity extends Activity {
         boolean isRunning = false;
         ActivityManager activityManager = (ActivityManager) App.getAppContext().getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(100);
-        
-        if (!(serviceList.size()>0)) {
-            return false;
-        }
+
+		if (serviceList == null || serviceList.size() <= 0) {
+			return false;
+		}
 
         for (int i=0; i<serviceList.size(); i++) {
         	
