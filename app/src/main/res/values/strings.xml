@@ -8,9 +8,9 @@
     <string name="startmonitor">开始监控</string>
     <string name="stopmonitor">停止监控</string>
     <string name="clearmemory">清理内存</string>
-    <string name="used_percent_value">内存使用：\r\n%1$s</string>
-    <string name="available_memory">可用内存：\r\n%1$s M</string>
-    <string name="total_pss">total Pss：\r\n%1$sK</string>
+    <string name="used_percent_value">内存使用:%1$s</string>
+    <string name="available_memory">可用:%1$sM</string>
+    <string name="total_pss">Pss Total:\r\n</string>
 
-    <string name="permission_err">当前targets API level 23+, 必须手动设置“允许在其他应用上层显示”开启才行！！</string>
+    <string name="permission_err">当前targets API level 23+, 必须手动设置“允许在其他应用上层显示”开启才行</string>
 </resources>

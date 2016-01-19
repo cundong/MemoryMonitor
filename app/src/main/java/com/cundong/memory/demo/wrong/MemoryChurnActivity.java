@@ -19,7 +19,7 @@ import com.cundong.memory.util.MemoryUtil;
  *
  * 这个操作有可能会影响到帧率，并使得用户感知到性能问题。
  *
- * Created by liucundong on 2015/12/28.
+ * Created by cundong on 2015/12/28.
  */
 public class MemoryChurnActivity extends Activity {
 
@@ -47,7 +47,7 @@ public class MemoryChurnActivity extends Activity {
 
                             long memSize = rowBytes * height;
                             Log.d("@Cundong", "memSize =" + memSize + "B =" + memSize * 1.0 / 1024 / 1024 +" M");
-                            Log.d("@Cundong", "getUsedPercentValue:" + MemoryUtil.getUsedPercentValue(MemoryChurnActivity.this));
+                            Log.d("@Cundong", "getUsedPercentValue:" + MemoryUtil.getUsedPercentValue());
                         }
 
                         /**

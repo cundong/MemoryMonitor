@@ -24,6 +24,9 @@ import com.premnirmal.Magnet.Magnet;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,12 +40,13 @@ public class CoreService extends Service implements IconCallback {
 
 	private static final String TAG = "CoreService";
 
-	private Context mContext = null;
 	private Timer mTimer;
 	
 	private Magnet mMagnet;
 
 	private View mIconView = null;
+	private View mMemoryClearView;
+
 	private TextView mDescView;
 	private ImageButton mClearBtn, mSettingBtn;
 
@@ -52,11 +56,11 @@ public class CoreService extends Service implements IconCallback {
 	public void onCreate() {
 		super.onCreate();
 
-		mContext = getApplicationContext();
-		
 		mIconView = getIconView();
 		mDescView = (TextView) mIconView.findViewById(R.id.content);
-		
+		mMemoryClearView = mIconView.findViewById(R.id.memory_clear_view);
+		mMemoryClearView.setVisibility(Constants.SHOW_MEMORY_CLEAR ? View.VISIBLE : View.GONE);
+
 		mClearBtn = (ImageButton) mIconView.findViewById(R.id.clear_btn);
 		mClearBtn.setOnClickListener( new OnClickListener(){
 
@@ -134,21 +138,26 @@ public class CoreService extends Service implements IconCallback {
 		@Override
 		public void run() {
 
-			String usedPercentValue = MemoryUtil.getUsedPercentValue(mContext);
-			long availableMemory = MemoryUtil.getAvailableMemory(mContext);
-			long totalPss = MemoryUtil.getTotalPss(mContext,
-					Constants.PROCESS_NAME);
+			String usedPercentValue = MemoryUtil.getUsedPercentValue();
+			long availableMemory = MemoryUtil.getAvailableMemory();
+			HashMap<String, Long> totalPssMap = MemoryUtil.getTotalPss(Constants.PROCESS_NAME_LIST);
 
 			float memory = availableMemory / (float) 1024 / (float) 1024;
-			DecimalFormat fnum = new DecimalFormat("##0.00");
+			DecimalFormat decimalFormat = new DecimalFormat("##0.00");
 			
 			final String[] content = new String[] {
 					getString(R.string.used_percent_value, usedPercentValue),
-					getString(R.string.available_memory, fnum.format(memory)),
-					getString(R.string.total_pss, totalPss) };
+					getString(R.string.available_memory, decimalFormat.format(memory)), getString(R.string.total_pss)};
 
 			StringBuffer sb = new StringBuffer();
-			sb.append(content[0]).append("\r\n").append(content[1]).append("\r\n").append(content[2]);
+			sb.append(content[0]).append(",").append(content[1]).append("\r\n").append(content[2]);
+
+			Iterator iterator = totalPssMap.entrySet().iterator();
+			while(iterator.hasNext()) {
+				Map.Entry entry = (Map.Entry) iterator.next();
+				entry.getKey();
+				sb.append(entry.getKey()).append("=").append("\r\n").append(entry.getValue()).append("\r\n");
+			}
 
 			Bundle data = new Bundle();
 			data.putString("content", sb.toString());

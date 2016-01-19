@@ -30,4 +30,10 @@
         android:layout_below="@+id/button2"
         android:text="@string/clearmemory" />
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button3"
+        android:text="Test EmptyProcess" />
 </LinearLayout>
