@@ -11,10 +11,13 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Debug.MemoryInfo;
 
+import com.jaredrummler.android.processes.ProcessManager;
+import com.jaredrummler.android.processes.models.AndroidAppProcess;
+
 public class MemoryUtil {
 
 	/**
-	 * getTotalPss
+	 * getTotalPss，5.0+使用开源的android-processes解决方案，5.0以下使用系统api
 	 * 
 	 * @param context
 	 * @param processName
@@ -24,19 +27,38 @@ public class MemoryUtil {
 
 		ActivityManager activityMgr = (ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE);
-		List<RunningAppProcessInfo> list = activityMgr.getRunningAppProcesses();
 
-		if (list != null) {
-			for (RunningAppProcessInfo processInfo : list) {
-				if (processInfo.processName.equals(processName)) {
-					int pid = processInfo.pid;
-					MemoryInfo[] memoryInfos = activityMgr
-							.getProcessMemoryInfo(new int[] { pid });
-					
-					MemoryInfo memoryInfo = memoryInfos[0];
-					int totalPss = memoryInfo.getTotalPss();
-					
-					return totalPss;
+		if (Build.VERSION.SDK_INT >= 21) {
+			List<AndroidAppProcess> list = ProcessManager.getRunningAppProcesses();
+
+			if (list != null) {
+				for (AndroidAppProcess processInfo : list) {
+					if (processInfo.name.equals(processName)) {
+						int pid = processInfo.pid;
+						MemoryInfo[] memoryInfos = activityMgr
+								.getProcessMemoryInfo(new int[] { pid });
+
+						MemoryInfo memoryInfo = memoryInfos[0];
+						int totalPss = memoryInfo.getTotalPss();
+
+						return totalPss;
+					}
+				}
+			}
+		} else {
+			List<RunningAppProcessInfo> list = activityMgr.getRunningAppProcesses();
+			if (list != null) {
+				for (RunningAppProcessInfo processInfo : list) {
+					if (processInfo.processName.equals(processName)) {
+						int pid = processInfo.pid;
+						MemoryInfo[] memoryInfos = activityMgr
+								.getProcessMemoryInfo(new int[] { pid });
+
+						MemoryInfo memoryInfo = memoryInfos[0];
+						int totalPss = memoryInfo.getTotalPss();
+
+						return totalPss;
+					}
 				}
 			}
 		}

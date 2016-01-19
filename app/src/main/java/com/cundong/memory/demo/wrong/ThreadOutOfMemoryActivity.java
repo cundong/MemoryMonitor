@@ -59,7 +59,7 @@ public class ThreadOutOfMemoryActivity extends Activity {
 			}
 
 			/* do something */
-			releaseZip(new WeakReference<Context>(mContext));
+			releaseZip(new WeakReference<>(mContext));
 		}
 	}
 }

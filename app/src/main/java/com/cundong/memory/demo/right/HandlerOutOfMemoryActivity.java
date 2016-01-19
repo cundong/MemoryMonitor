@@ -23,7 +23,7 @@ public class HandlerOutOfMemoryActivity extends Activity {
 		private final WeakReference<HandlerOutOfMemoryActivity> mActivity;
 
 		public MyHandler(HandlerOutOfMemoryActivity activity) {
-			mActivity = new WeakReference<HandlerOutOfMemoryActivity>(activity);
+			mActivity = new WeakReference<>(activity);
 		}
 
 		@Override

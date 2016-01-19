@@ -32,7 +32,7 @@ public class TwoThreadOutOfMemoryActivity extends Activity {
 		private final WeakReference<TwoThreadOutOfMemoryActivity> mActivity;
 
 		public MyThread(TwoThreadOutOfMemoryActivity activity) {
-			mActivity = new WeakReference<TwoThreadOutOfMemoryActivity>(activity);
+			mActivity = new WeakReference<>(activity);
 		}
 		
 		@Override

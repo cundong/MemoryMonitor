@@ -38,7 +38,7 @@ public class AsyncTaskOutOfMemoryActivity extends Activity {
 
 	    public BitmapWorkerTask(ImageView imageView) {
 	        // Use a WeakReference to ensure the ImageView can be garbage collected
-	        imageViewReference = new WeakReference<ImageView>(imageView);
+	        imageViewReference = new WeakReference<>(imageView);
 	    }
 
 	    // Decode image in background.
