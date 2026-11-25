@@ -1,54 +1,26 @@
-# MemoryMonitor 
+# MemoryMonitor
 
-一个给开发者使用的Android App内存清理、监控工具。  
+> **历史项目**：这是早期 Android 的内存调试示例，保留源码供学习和查阅。不建议把它用作现代 Android 的跨应用监控或内存清理工具。
 
-主要包括三部分内容：
+## 现代 Android 的限制
 
-* 内存清理  
+- **跨应用 PSS**：从 Android 10（API 29）开始，普通应用调用 [`ActivityManager.getProcessMemoryInfo()`](https://developer.android.com/reference/android/app/ActivityManager#getProcessMemoryInfo(int%5B%5D)) 时，只能读取与调用方同 UID 的进程数据，系统也限制采样频率。旧示例不能在现代设备上按秒读取任意应用的 PSS。
+- **清理其他应用**：从 Android 14（API 34）开始，[`killBackgroundProcesses()`](https://developer.android.com/about/versions/14/behavior-changes-all#killbackgroundprocesses) 只能结束本应用的后台进程。手动结束进程不等同于系统在内存压力下回收进程，也不会给设备「加速」。
 
-通过内存清理可以模拟系统内存不足时对进程的回收。
+## 现在怎么调试
 
-* Pss监控  
+- **观察内存占用**：连接测试设备或模拟器，把下面的包名换成被测应用的包名，在同一操作前后取样。
 
-通过内存监控可以监控指定应用程序使用的total Pss以及当前手机的内存使用情况，从而检测该应用是否存在内存泄漏。
+  ```sh
+  adb shell dumpsys meminfo com.example.app
+  ```
 
-* 内存优化
+  PSS（Proportional Set Size）包含进程独占的内存和按比例分摊的共享内存。它适合看占用趋势；一次升高或没有回落，都不能单独证明泄漏或断定会 OOM。怀疑 Java/Kotlin 对象被意外持有时，用 [Android Studio Profiler 的堆转储](https://developer.android.com/studio/profile/capture-heap-dump) 检查对象及其引用链。参见 [`dumpsys meminfo` 指南](https://developer.android.com/tools/dumpsys#meminfo)。
+- **验证进程重建后的状态恢复**：在测试设备上打开被测页面，按 Home 切到后台，再执行 `adb shell am kill com.example.app`，从最近任务返回。确认进程确实重建后，再检查页面状态是否恢复。这是进程重建测试，不是在模拟真实内存压力。参见 [ADB Activity Manager 命令](https://developer.android.com/tools/adb#am)和 [Activity 状态恢复](https://developer.android.com/guide/components/activities/activity-lifecycle#saras)。
 
-整理了一些关于内存优化的tips，以及一些可能导致内存溢出的场景示例，包含错误的写法和正确的写法。
+## 历史内存示例
 
-## 1.内存清理
-
-类似各种手机管家的 **加速球**，获取系统已用内存比率、可用内存大小，一键清理。
-
-可以用于测试自己开发的Activity、Fragment健壮性，模拟Activity、Fragment被回收的场景，测试自己的程序是否完好的保存、恢复当前场景。
-
-比如：打开你开发的某个Activity、Fragment，切到后台，清理一次内存，在将其切回前台后，看会不会出现空指针异常，以及程序状态是否被恢复。
-
-## 2.Pss监控
-
-Android 系统中的内存和Linux系统一样，存在着大量的共享内存。每个APP占内存会有私有和公共的两部分，我们可以通过App的Pss值，可以获取到这两部分内存。
-
-Pss（Proportional Set Size）：实际使用的物理内存，即：自身应用占有的内存+共享内存中比例分配给这个应用的内存。
-
-通过该程序，每隔1秒，获取一次被监控App的Total Pss值。
-
-使用某个功能（可能会导致OOM的那些都要试试），查看Pss是否飙升，或者使用过许久都没有降低。
-
-如果使用后飙升并且长时间都降不下来，那就说明肯定会导致OOM（对象使用过之后还被引用着未释放），如果使用之后Total Pss飙升，但是使用过之后能降下来，也可能会导致OOM，我们还是需要去一点一点排查是什么原因导致的。
-
-如果使用后飙升并且长时间都降不下来，我们就需要 [使用MAT来进一步分析问题所在](http://blog.csdn.net/xiaanming/article/details/42396507)。
-
-此处提到的Pss，也可以使用adb命令 
-
-> adb shell dumpsys meminfo *your packageName* 
-
-查看：  
-
-![total Pss](https://github.com/cundong/MemoryMonitor/blob/master/screenshot/total%20Pss.png?raw=true)  
-
-## 3.内存优化
-
-Android的虚拟机是基于寄存器的Dalvik，它的最大堆大小一般比较小（最低端的设备16M，后来出的设备变成了24M，48M等等），因此我们所能利用的内存空间是有限的。如果我们使用内存占用超过了一定的限额后就会出现OutOfMemory的错误。
+以下保留原项目的示例，供理解引用关系和历史写法。旧版运行时描述、固定堆大小和主动调用 `System.gc()` 不是现代 Android 的调优建议。
 
 可能会导致内存溢出的情况有以下几种：
 
